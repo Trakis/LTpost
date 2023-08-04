@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import opt.ltpost.App;
+import opt.ltpost.controllers.PostLabelsSignController;
 
 /**
  *
@@ -18,8 +19,8 @@ import opt.ltpost.App;
 public class PostLabelsSignView {
 
     private static PostLabelsSignView instance = null;
-    private AnchorPane nodeView;
-    private FXMLLoader loader;
+    private final AnchorPane nodeView;
+    private final FXMLLoader loader;
 
     private PostLabelsSignView() throws IOException {
 
@@ -28,8 +29,8 @@ public class PostLabelsSignView {
         nodeView = (AnchorPane) loader.load();
 
         // Give the controller access to the main app
-        //   CustomLabelsController controller = loader.getController();
-        // controller.initParameters();
+        PostLabelsSignController controller = loader.getController();
+        controller.initParameters(App.getPrimaryStage());
     }
 
     public static synchronized PostLabelsSignView getInstance() throws IOException {

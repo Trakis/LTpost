@@ -16,6 +16,7 @@
  */
 package opt.ltpost.controllers;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,6 +24,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import org.controlsfx.control.Notifications;
 
 /**
  * FXML Controller class
@@ -30,6 +35,8 @@ import javafx.scene.layout.VBox;
  * @author Trakis
  */
 public class PostLabelsSignController implements Initializable {
+
+    private Stage mainStage;
 
     @FXML
     private VBox vBoxInfoContainer;
@@ -46,19 +53,95 @@ public class PostLabelsSignController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
+
+    /**
+     * Initialize additional parameters
+     *
+     * @param primaryStage
+     */
+    public void initParameters(Stage primaryStage) {
+        this.mainStage = primaryStage;
+
+    }
 
     @FXML
     private void onClickPostLabelLocation_Browse(ActionEvent event) {
+
+        //  
+        File KKLDBFile;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Please Select Post Label");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Pdf", "*.pdf"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        KKLDBFile = fileChooser.showOpenDialog(mainStage);
+        if (KKLDBFile != null) {
+
+            txtBox_PostLabelLocation.setText(KKLDBFile.getAbsolutePath());
+            try {
+                System.out.println("path: " + KKLDBFile.getAbsolutePath());
+                //  modelFabricSamples.setDatabasePath(KKLDBFile.getAbsolutePath());
+
+            } catch (Exception e) {
+                //  System.out.println("DatabaseConfigurationViewController.onClickExpensesDb_Browse: Database path Setup Error " + e);
+                showWarningMessage("error: " + e, "PostLabelLocation");
+            }
+
+        }
+
     }
 
     @FXML
     private void onClickSignedPostLabelFolderLocation_Browse(ActionEvent event) {
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        //directoryChooser.setInitialDirectory(new File("src"));
+
+        File selectedDirectory = directoryChooser.showDialog(mainStage);
+        txtBox_SignedPostLabelFolderLocation.setText(selectedDirectory.getAbsolutePath());
+
     }
 
     @FXML
     private void onClickSignatureImageLocation_Browse(ActionEvent event) {
+        //  
+        File KKLDBFile;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Please Select Signature image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.gif", "*.png", "*.bmp"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        KKLDBFile = fileChooser.showOpenDialog(mainStage);
+        if (KKLDBFile != null) {
+
+            txtBox_SignatureImageLocation.setText(KKLDBFile.getAbsolutePath());
+            try {
+                System.out.println("path: " + KKLDBFile.getAbsolutePath());
+                //  modelFabricSamples.setDatabasePath(KKLDBFile.getAbsolutePath());
+
+            } catch (Exception e) {
+                //  System.out.println("DatabaseConfigurationViewController.onClickExpensesDb_Browse: Database path Setup Error " + e);
+                showWarningMessage("error: " + e, "Signature Image");
+            }
+
+        }
     }
 
-    
+    /**
+     * warning messages method
+     *
+     * @param message
+     * @param title
+     */
+    private void showWarningMessage(String message, String title) {
+        Notifications notify = Notifications.create()
+                .title(title)
+                .text(message)
+                .owner(mainStage);
+
+        // notify.darkStyle();
+        notify.showWarning();
+    }
+
 }
