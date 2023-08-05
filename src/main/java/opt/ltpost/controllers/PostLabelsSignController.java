@@ -22,11 +22,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import opt.ltpost.model.ModelPrefs;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -37,6 +40,7 @@ import org.controlsfx.control.Notifications;
 public class PostLabelsSignController implements Initializable {
 
     private Stage mainStage;
+    private ModelPrefs modelPrefs;
 
     @FXML
     private VBox vBoxInfoContainer;
@@ -46,6 +50,18 @@ public class PostLabelsSignController implements Initializable {
     private TextField txtBox_SignedPostLabelFolderLocation;
     @FXML
     private TextField txtBox_SignatureImageLocation;
+    @FXML
+    private DatePicker DPicker_DateSigned;
+    @FXML
+    private Slider Slider_StampPointX;
+    @FXML
+    private Slider Slider_StampPointY;
+    @FXML
+    private Slider Slider_StampWidth;
+    @FXML
+    private Slider Slider_SignatureHeight;
+    @FXML
+    private Slider Slider_DateSize;
 
     /**
      * Initializes the controller class.
@@ -60,9 +76,11 @@ public class PostLabelsSignController implements Initializable {
      *
      * @param primaryStage
      */
-    public void initParameters(Stage primaryStage) {
+    public void initParameters(Stage primaryStage, ModelPrefs modelPrefs) {
         this.mainStage = primaryStage;
+        this.modelPrefs = modelPrefs;
 
+        loadFormWithDataWithSaveRecords();
     }
 
     @FXML
@@ -80,11 +98,11 @@ public class PostLabelsSignController implements Initializable {
 
             txtBox_PostLabelLocation.setText(KKLDBFile.getAbsolutePath());
             try {
-                System.out.println("path: " + KKLDBFile.getAbsolutePath());
-                //  modelFabricSamples.setDatabasePath(KKLDBFile.getAbsolutePath());
+
+                modelPrefs.setPostLabelLocationKey(KKLDBFile.getAbsolutePath());
 
             } catch (Exception e) {
-                //  System.out.println("DatabaseConfigurationViewController.onClickExpensesDb_Browse: Database path Setup Error " + e);
+
                 showWarningMessage("error: " + e, "PostLabelLocation");
             }
 
@@ -100,6 +118,12 @@ public class PostLabelsSignController implements Initializable {
 
         File selectedDirectory = directoryChooser.showDialog(mainStage);
         txtBox_SignedPostLabelFolderLocation.setText(selectedDirectory.getAbsolutePath());
+
+        try {
+            modelPrefs.setSignedPostLabelFolderLocation(selectedDirectory.getAbsolutePath());
+        } catch (Exception e) {
+            showWarningMessage("error: " + e, "Signed Post Label directory field");
+        }
 
     }
 
@@ -117,15 +141,22 @@ public class PostLabelsSignController implements Initializable {
 
             txtBox_SignatureImageLocation.setText(KKLDBFile.getAbsolutePath());
             try {
-                System.out.println("path: " + KKLDBFile.getAbsolutePath());
-                //  modelFabricSamples.setDatabasePath(KKLDBFile.getAbsolutePath());
-
+                modelPrefs.setSignatureImageLocation(KKLDBFile.getAbsolutePath());
             } catch (Exception e) {
-                //  System.out.println("DatabaseConfigurationViewController.onClickExpensesDb_Browse: Database path Setup Error " + e);
                 showWarningMessage("error: " + e, "Signature Image");
             }
 
         }
+    }
+
+    /**
+     * Fill in all form fields with the data stored in local
+     */
+    private void loadFormWithDataWithSaveRecords() {
+        txtBox_PostLabelLocation.setText(modelPrefs.getPostLabelLocationKey());
+        txtBox_SignedPostLabelFolderLocation.setText(modelPrefs.getSignedPostLabelFolderLocation());
+        txtBox_SignatureImageLocation.setText(modelPrefs.getSignatureImageLocation());
+
     }
 
     /**

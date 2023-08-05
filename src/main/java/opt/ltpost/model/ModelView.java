@@ -14,13 +14,13 @@ import java.io.IOException;
  *
  * @author gbruzgys
  */
-public class ViewManager {
+public class ModelView {
 
-    private static ViewManager instance = null;
+    private static ModelView instance = null;
 
     private LayoutRootView rootView = null;
 
-    private ViewManager() {
+    private ModelView() {
         try {
             rootView = LayoutRootView.getInstance();
             rootView.show();
@@ -29,9 +29,9 @@ public class ViewManager {
         }
     }
 
-    public static synchronized ViewManager getInstance() {
+    public static synchronized ModelView getInstance() {
         if (instance == null) {
-            instance = new ViewManager();
+            instance = new ModelView();
         }
         return instance;
     }
