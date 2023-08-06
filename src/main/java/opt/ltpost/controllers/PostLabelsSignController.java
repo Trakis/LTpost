@@ -18,7 +18,10 @@ package opt.ltpost.controllers;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +44,11 @@ public class PostLabelsSignController implements Initializable {
 
     private Stage mainStage;
     private ModelPrefs modelPrefs;
+    private Long stampPointX;
+    private Long stampPointY;
+    private Long stampWidth;
+    private Long stampDateFontSize;
+    private Long stampSignatureImageHeight;
 
     @FXML
     private VBox vBoxInfoContainer;
@@ -59,9 +67,9 @@ public class PostLabelsSignController implements Initializable {
     @FXML
     private Slider Slider_StampWidth;
     @FXML
-    private Slider Slider_SignatureHeight;
+    private Slider Slider_StampSignatureHeight;
     @FXML
-    private Slider Slider_DateSize;
+    private Slider Slider_StampDateSize;
 
     /**
      * Initializes the controller class.
@@ -80,7 +88,11 @@ public class PostLabelsSignController implements Initializable {
         this.mainStage = primaryStage;
         this.modelPrefs = modelPrefs;
 
+        // set date picker object to todays date
+        DPicker_DateSigned.setValue(LocalDate.now());
+
         loadFormWithDataWithSaveRecords();
+
     }
 
     @FXML
@@ -153,9 +165,101 @@ public class PostLabelsSignController implements Initializable {
      * Fill in all form fields with the data stored in local
      */
     private void loadFormWithDataWithSaveRecords() {
+        //initial values, before user saves it to the register
+        stampPointX = 20L;
+        stampPointY = 20L;
+        stampWidth = 350L;
+        stampDateFontSize = 20L;
+        stampSignatureImageHeight = 20L;
+
+        // define settings for Sliders
+        setGenericSliderParameter(-20, 50, Slider_StampPointX);
+        setGenericSliderParameter(-20, 50, Slider_StampPointY);
+        setGenericSliderParameter(300, 400, Slider_StampWidth);
+        setGenericSliderParameter(10, 40, Slider_StampDateSize);
+        setGenericSliderParameter(10, 50, Slider_StampSignatureHeight);
+
+        // fill info to locations text boxes
         txtBox_PostLabelLocation.setText(modelPrefs.getPostLabelLocationKey());
         txtBox_SignedPostLabelFolderLocation.setText(modelPrefs.getSignedPostLabelFolderLocation());
         txtBox_SignatureImageLocation.setText(modelPrefs.getSignatureImageLocation());
+
+        // set data for sliders 
+        if (modelPrefs.getStampPointX() != null) {
+            Slider_StampPointX.setValue(modelPrefs.getStampPointX());
+        } else {
+            Slider_StampPointX.setValue(stampPointX);
+        }
+
+        if (modelPrefs.getStampPointY() != null) {
+            Slider_StampPointY.setValue(modelPrefs.getStampPointY());
+        } else {
+            Slider_StampPointY.setValue(stampPointY);
+        }
+
+        if (modelPrefs.getStampWidth() != null) {
+            Slider_StampWidth.setValue(modelPrefs.getStampWidth());
+        } else {
+            Slider_StampWidth.setValue(stampWidth);
+        }
+
+        if (modelPrefs.getStampDateFontSize() != null) {
+            Slider_StampDateSize.setValue(modelPrefs.getStampDateFontSize());
+        } else {
+            Slider_StampDateSize.setValue(stampDateFontSize);
+        }
+
+        if (modelPrefs.getStampSignatureImageHeight() != null) {
+            Slider_StampSignatureHeight.setValue(modelPrefs.getStampSignatureImageHeight());
+        } else {
+            Slider_StampSignatureHeight.setValue(stampSignatureImageHeight);
+        }
+
+        // set listeners for sliders, if slider value changed, it updates to register values
+        Slider_StampPointX.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                if (!Slider_StampPointX.isValueChanging()) {
+                    modelPrefs.setStampPointX(Double.valueOf(Slider_StampPointX.getValue()).longValue());
+                }
+            }
+        });
+
+        Slider_StampPointY.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                if (!Slider_StampPointY.isValueChanging()) {
+                    modelPrefs.setStampPointY(Double.valueOf(Slider_StampPointY.getValue()).longValue());
+                }
+            }
+        });
+
+        Slider_StampWidth.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                if (!Slider_StampWidth.isValueChanging()) {
+                    modelPrefs.setStampWidth(Double.valueOf(Slider_StampWidth.getValue()).longValue());
+                }
+            }
+        });
+
+        Slider_StampSignatureHeight.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                if (!Slider_StampSignatureHeight.isValueChanging()) {
+                    modelPrefs.setStampSignatureImageHeight(Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue());
+                }
+            }
+        });
+
+        Slider_StampDateSize.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+                if (!Slider_StampDateSize.isValueChanging()) {
+                    modelPrefs.setStampDateFontSize(Double.valueOf(Slider_StampDateSize.getValue()).longValue());
+                }
+            }
+        });
 
     }
 
@@ -173,6 +277,20 @@ public class PostLabelsSignController implements Initializable {
 
         // notify.darkStyle();
         notify.showWarning();
+    }
+
+    private void setGenericSliderParameter(double min, double max, Slider sliderToChange) {
+        sliderToChange.setMin(min);
+        sliderToChange.setMax(max);
+
+        sliderToChange.setShowTickLabels(true);
+        sliderToChange.setShowTickMarks(true);
+        sliderToChange.setSnapToTicks(true);
+
+        sliderToChange.setMajorTickUnit(5);
+        sliderToChange.setMinorTickCount(0);
+        sliderToChange.setBlockIncrement(5);
+
     }
 
 }

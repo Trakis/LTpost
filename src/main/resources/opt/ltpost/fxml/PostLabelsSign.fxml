@@ -189,13 +189,13 @@
                                                 <VBox>
                                                    <children>
                                                       <Label styleClass="label-bright" text="signature height:" />
-                                                      <Slider fx:id="Slider_SignatureHeight" />
+                                                      <Slider fx:id="Slider_StampSignatureHeight" />
                                                    </children>
                                                 </VBox>
                                                 <VBox>
                                                    <children>
                                                       <Label styleClass="label-bright" text="date font size:" />
-                                                      <Slider fx:id="Slider_DateSize" />
+                                                      <Slider fx:id="Slider_StampDateSize" />
                                                    </children>
                                                 </VBox>
                                              </children>

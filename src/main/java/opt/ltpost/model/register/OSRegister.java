@@ -27,11 +27,13 @@ public class OSRegister {
         PREFS_LT_POST.put(keyName.toString(), keyValue);
     }
 
+   
+
     /**
      * Create register key with value
      *
      * @param keyName register variable name
-     * @param keyValue value long
+     * @param keyValue value LONG
      */
     public static void setKey(keyNames keyName, long keyValue) {
         PREFS_LT_POST.putLong(keyName.toString(), keyValue);
@@ -55,12 +57,11 @@ public class OSRegister {
         POST_LABEL_LOCATION,
         SIGNED_POST_LABEL_FOLDER,
         SIGNATURE_IMAGE_LOCATION,
-        DATE_SIGNED,
         STAMP_POINT_X,
         STAMP_POINT_Y,
         STAMP_WIDTH,
-        DATE_SIZE,
-        ;
+        STAMP_DATE_FONT_SIZE,
+        STAMP_SIGNATURE_IMAGE_HEIGHT;
 
     }
 
