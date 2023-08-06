@@ -58,4 +58,87 @@ public class ModelPrefs {
         return OSRegister.getKey(OSRegister.keyNames.SIGNATURE_IMAGE_LOCATION);
     }
 
+//        STAMP_WIDTH,
+    public void setStampPointX(Long pointX) {
+        OSRegister.setKey(OSRegister.keyNames.STAMP_POINT_X, pointX);
+    }
+
+    public Long getStampPointX() {
+        Long pointX = null;
+
+        try {
+            pointX = Long.valueOf(OSRegister.getKey(OSRegister.keyNames.STAMP_POINT_X));
+        } catch (NumberFormatException e) {
+
+        }
+
+        return pointX;
+    }
+
+    public void setStampPointY(Long pointY) {
+        OSRegister.setKey(OSRegister.keyNames.STAMP_POINT_Y, pointY);
+    }
+
+    public Long getStampPointY() {
+        Long pointY = null;
+
+        try {
+            pointY = Long.valueOf(OSRegister.getKey(OSRegister.keyNames.STAMP_POINT_Y));
+        } catch (NumberFormatException e) {
+
+        }
+
+        return pointY;
+    }
+
+    public void setStampWidth(Long stampWidth) {
+        OSRegister.setKey(OSRegister.keyNames.STAMP_WIDTH, stampWidth);
+
+    }
+
+    public Long getStampWidth() {
+        Long stampWidth = null;
+        try {
+            stampWidth = Long.valueOf(OSRegister.getKey(OSRegister.keyNames.STAMP_WIDTH));
+        } catch (NumberFormatException e) {
+
+        }
+
+        return stampWidth;
+    }
+
+    public void setStampDateFontSize(Long stampDateFontSize) {
+        OSRegister.setKey(OSRegister.keyNames.STAMP_DATE_FONT_SIZE, stampDateFontSize);
+
+    }
+
+//        STAMP_DATE_FONT_SIZE,
+//        STAMP_SIGNATURE_IMAGE_HEIGHT;
+    public Long getStampDateFontSize() {
+        Long stampDateFontSize = null;
+        try {
+            stampDateFontSize = Long.valueOf(OSRegister.getKey(OSRegister.keyNames.STAMP_DATE_FONT_SIZE));
+        } catch (NumberFormatException e) {
+
+        }
+
+        return stampDateFontSize;
+    }
+
+    public void setStampSignatureImageHeight(Long stampSignatureImageHeight) {
+        OSRegister.setKey(OSRegister.keyNames.STAMP_SIGNATURE_IMAGE_HEIGHT, stampSignatureImageHeight);
+
+    }
+
+    public Long getStampSignatureImageHeight() {
+        Long stampSignatureImageHeight = null;
+        try {
+            stampSignatureImageHeight = Long.valueOf(OSRegister.getKey(OSRegister.keyNames.STAMP_SIGNATURE_IMAGE_HEIGHT));
+        } catch (NumberFormatException e) {
+
+        }
+
+        return stampSignatureImageHeight;
+    }
+
 }
