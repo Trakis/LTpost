@@ -106,13 +106,14 @@
     <dependency>
       <groupId>com.itextpdf</groupId>
       <artifactId>itext7-core</artifactId>
-      <version>8.0.0</version>
+      <version>8.0.1</version>
       <type>pom</type>
       <scope>compile</scope>
     </dependency>
   </dependencies>
   <properties>
-    <itext.version>8.0.0</itext.version>
+    <itext.version>8.0.1</itext.version>
+    <ikonli.version>12.3.1</ikonli.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javafx.version>21-ea+24</javafx.version>
   </properties>

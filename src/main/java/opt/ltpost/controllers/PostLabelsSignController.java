@@ -26,6 +26,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -70,6 +71,16 @@ public class PostLabelsSignController implements Initializable {
     private Slider Slider_StampSignatureHeight;
     @FXML
     private Slider Slider_StampDateSize;
+    @FXML
+    private Label Label_StampPointX;
+    @FXML
+    private Label Label_StampPointY;
+    @FXML
+    private Label Label_StampWidth;
+    @FXML
+    private Label Label_StampSignatureHeight;
+    @FXML
+    private Label Label_StampDateSize;
 
     /**
      * Initializes the controller class.
@@ -161,6 +172,11 @@ public class PostLabelsSignController implements Initializable {
         }
     }
 
+    @FXML
+    private void onClickSignDocument(ActionEvent event) {
+        System.out.println("sign document");
+    }
+
     /**
      * Fill in all form fields with the data stored in local
      */
@@ -215,13 +231,22 @@ public class PostLabelsSignController implements Initializable {
             Slider_StampSignatureHeight.setValue(stampSignatureImageHeight);
         }
 
-        // set listeners for sliders, if slider value changed, it updates to register values
+        // update sliders info label with value of the slider
+        Label_StampPointX.setText("(" + Double.valueOf(Slider_StampPointX.getValue()).longValue() + ")");
+        Label_StampPointY.setText("(" + Double.valueOf(Slider_StampPointY.getValue()).longValue() + ")");
+        Label_StampWidth.setText("(" + Double.valueOf(Slider_StampWidth.getValue()).longValue() + ")");
+        Label_StampSignatureHeight.setText("(" + Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue() + ")");
+        Label_StampDateSize.setText("(" + Double.valueOf(Slider_StampDateSize.getValue()).longValue() + ")");
+
+        // set listeners for sliders, if slider value changed, it updates to register values & info label
         Slider_StampPointX.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
                 if (!Slider_StampPointX.isValueChanging()) {
                     modelPrefs.setStampPointX(Double.valueOf(Slider_StampPointX.getValue()).longValue());
                 }
+                //info label updated with the value
+                Label_StampPointX.setText("(" + Double.valueOf(Slider_StampPointX.getValue()).longValue() + ")");
             }
         });
 
@@ -231,6 +256,8 @@ public class PostLabelsSignController implements Initializable {
                 if (!Slider_StampPointY.isValueChanging()) {
                     modelPrefs.setStampPointY(Double.valueOf(Slider_StampPointY.getValue()).longValue());
                 }
+                //info label updated with the value
+                Label_StampPointY.setText("(" + Double.valueOf(Slider_StampPointY.getValue()).longValue() + ")");
             }
         });
 
@@ -240,6 +267,8 @@ public class PostLabelsSignController implements Initializable {
                 if (!Slider_StampWidth.isValueChanging()) {
                     modelPrefs.setStampWidth(Double.valueOf(Slider_StampWidth.getValue()).longValue());
                 }
+                //info label updated with the value
+                Label_StampWidth.setText("(" + Double.valueOf(Slider_StampWidth.getValue()).longValue() + ")");
             }
         });
 
@@ -249,6 +278,8 @@ public class PostLabelsSignController implements Initializable {
                 if (!Slider_StampSignatureHeight.isValueChanging()) {
                     modelPrefs.setStampSignatureImageHeight(Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue());
                 }
+                //info label updated with the value
+                Label_StampSignatureHeight.setText("(" + Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue() + ")");
             }
         });
 
@@ -258,6 +289,8 @@ public class PostLabelsSignController implements Initializable {
                 if (!Slider_StampDateSize.isValueChanging()) {
                     modelPrefs.setStampDateFontSize(Double.valueOf(Slider_StampDateSize.getValue()).longValue());
                 }
+                //info label updated with the value
+                Label_StampDateSize.setText("(" + Double.valueOf(Slider_StampDateSize.getValue()).longValue() + ")");
             }
         });
 
