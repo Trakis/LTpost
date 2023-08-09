@@ -29,7 +29,7 @@ public class ModelPrefs {
      *
      * @param key - URL
      */
-    public void setPostLabelLocationKey(String key) {
+    public void setPostLabelLocation(String key) {
         OSRegister.setKey(OSRegister.keyNames.POST_LABEL_LOCATION, key);
     }
 
@@ -38,7 +38,7 @@ public class ModelPrefs {
      *
      * @return URL
      */
-    public String getPostLabelLocationKey() {
+    public String getPostLabelLocation() {
         return OSRegister.getKey(OSRegister.keyNames.POST_LABEL_LOCATION);
     }
 

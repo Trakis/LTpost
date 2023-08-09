@@ -17,9 +17,12 @@
 package opt.ltpost.controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -33,7 +36,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import opt.ltpost.model.ModelPdf;
 import opt.ltpost.model.ModelPrefs;
+import opt.ltpost.model.blogic.PdfData;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -42,15 +47,16 @@ import org.controlsfx.control.Notifications;
  * @author Trakis
  */
 public class PostLabelsSignController implements Initializable {
-
+    
     private Stage mainStage;
     private ModelPrefs modelPrefs;
+    private ModelPdf modelPdf;
     private Long stampPointX;
     private Long stampPointY;
     private Long stampWidth;
     private Long stampDateFontSize;
     private Long stampSignatureImageHeight;
-
+    
     @FXML
     private VBox vBoxInfoContainer;
     @FXML
@@ -95,17 +101,18 @@ public class PostLabelsSignController implements Initializable {
      *
      * @param primaryStage
      */
-    public void initParameters(Stage primaryStage, ModelPrefs modelPrefs) {
+    public void initParameters(Stage primaryStage, ModelPrefs modelPrefs, ModelPdf modelPdf) {
         this.mainStage = primaryStage;
         this.modelPrefs = modelPrefs;
+        this.modelPdf = modelPdf;
 
         // set date picker object to todays date
         DPicker_DateSigned.setValue(LocalDate.now());
-
+        
         loadFormWithDataWithSaveRecords();
-
+        
     }
-
+    
     @FXML
     private void onClickPostLabelLocation_Browse(ActionEvent event) {
 
@@ -118,38 +125,38 @@ public class PostLabelsSignController implements Initializable {
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         KKLDBFile = fileChooser.showOpenDialog(mainStage);
         if (KKLDBFile != null) {
-
+            
             txtBox_PostLabelLocation.setText(KKLDBFile.getAbsolutePath());
             try {
-
-                modelPrefs.setPostLabelLocationKey(KKLDBFile.getAbsolutePath());
-
+                
+                modelPrefs.setPostLabelLocation(KKLDBFile.getAbsolutePath());
+                
             } catch (Exception e) {
-
+                
                 showWarningMessage("error: " + e, "PostLabelLocation");
             }
-
+            
         }
-
+        
     }
-
+    
     @FXML
     private void onClickSignedPostLabelFolderLocation_Browse(ActionEvent event) {
-
+        
         DirectoryChooser directoryChooser = new DirectoryChooser();
         //directoryChooser.setInitialDirectory(new File("src"));
 
         File selectedDirectory = directoryChooser.showDialog(mainStage);
         txtBox_SignedPostLabelFolderLocation.setText(selectedDirectory.getAbsolutePath());
-
+        
         try {
             modelPrefs.setSignedPostLabelFolderLocation(selectedDirectory.getAbsolutePath());
         } catch (Exception e) {
             showWarningMessage("error: " + e, "Signed Post Label directory field");
         }
-
+        
     }
-
+    
     @FXML
     private void onClickSignatureImageLocation_Browse(ActionEvent event) {
         //  
@@ -161,20 +168,28 @@ public class PostLabelsSignController implements Initializable {
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         KKLDBFile = fileChooser.showOpenDialog(mainStage);
         if (KKLDBFile != null) {
-
+            
             txtBox_SignatureImageLocation.setText(KKLDBFile.getAbsolutePath());
             try {
                 modelPrefs.setSignatureImageLocation(KKLDBFile.getAbsolutePath());
             } catch (Exception e) {
                 showWarningMessage("error: " + e, "Signature Image");
             }
-
+            
         }
     }
-
+    
     @FXML
     private void onClickSignDocument(ActionEvent event) {
         System.out.println("sign document");
+        try {
+            modelPdf.signPDFFile(getData());
+        } catch (IOException ex) {
+            
+            showWarningMessage(ex.getMessage(), "Signing Process");
+            
+        }
+        
     }
 
     /**
@@ -182,21 +197,21 @@ public class PostLabelsSignController implements Initializable {
      */
     private void loadFormWithDataWithSaveRecords() {
         //initial values, before user saves it to the register
-        stampPointX = 20L;
-        stampPointY = 20L;
+        stampPointX = -3L;
+        stampPointY = 30L;
         stampWidth = 350L;
-        stampDateFontSize = 20L;
+        stampDateFontSize = 10L;
         stampSignatureImageHeight = 20L;
 
         // define settings for Sliders
-        setGenericSliderParameter(-20, 50, Slider_StampPointX);
-        setGenericSliderParameter(-20, 50, Slider_StampPointY);
-        setGenericSliderParameter(300, 400, Slider_StampWidth);
-        setGenericSliderParameter(10, 40, Slider_StampDateSize);
-        setGenericSliderParameter(10, 50, Slider_StampSignatureHeight);
+        setGenericSliderParameter(-10, 5, Slider_StampPointX,1,0);
+        setGenericSliderParameter(20, 50, Slider_StampPointY,5,4);
+        setGenericSliderParameter(300, 400, Slider_StampWidth,10,9);      
+        setGenericSliderParameter(10, 50, Slider_StampSignatureHeight,5,4);
+         setGenericSliderParameter(10, 20, Slider_StampDateSize,1,0);
 
         // fill info to locations text boxes
-        txtBox_PostLabelLocation.setText(modelPrefs.getPostLabelLocationKey());
+        txtBox_PostLabelLocation.setText(modelPrefs.getPostLabelLocation());
         txtBox_SignedPostLabelFolderLocation.setText(modelPrefs.getSignedPostLabelFolderLocation());
         txtBox_SignatureImageLocation.setText(modelPrefs.getSignatureImageLocation());
 
@@ -206,25 +221,25 @@ public class PostLabelsSignController implements Initializable {
         } else {
             Slider_StampPointX.setValue(stampPointX);
         }
-
+        
         if (modelPrefs.getStampPointY() != null) {
             Slider_StampPointY.setValue(modelPrefs.getStampPointY());
         } else {
             Slider_StampPointY.setValue(stampPointY);
         }
-
+        
         if (modelPrefs.getStampWidth() != null) {
             Slider_StampWidth.setValue(modelPrefs.getStampWidth());
         } else {
             Slider_StampWidth.setValue(stampWidth);
         }
-
+        
         if (modelPrefs.getStampDateFontSize() != null) {
             Slider_StampDateSize.setValue(modelPrefs.getStampDateFontSize());
         } else {
             Slider_StampDateSize.setValue(stampDateFontSize);
         }
-
+        
         if (modelPrefs.getStampSignatureImageHeight() != null) {
             Slider_StampSignatureHeight.setValue(modelPrefs.getStampSignatureImageHeight());
         } else {
@@ -249,7 +264,7 @@ public class PostLabelsSignController implements Initializable {
                 Label_StampPointX.setText("(" + Double.valueOf(Slider_StampPointX.getValue()).longValue() + ")");
             }
         });
-
+        
         Slider_StampPointY.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -260,7 +275,7 @@ public class PostLabelsSignController implements Initializable {
                 Label_StampPointY.setText("(" + Double.valueOf(Slider_StampPointY.getValue()).longValue() + ")");
             }
         });
-
+        
         Slider_StampWidth.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -271,7 +286,7 @@ public class PostLabelsSignController implements Initializable {
                 Label_StampWidth.setText("(" + Double.valueOf(Slider_StampWidth.getValue()).longValue() + ")");
             }
         });
-
+        
         Slider_StampSignatureHeight.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -282,7 +297,7 @@ public class PostLabelsSignController implements Initializable {
                 Label_StampSignatureHeight.setText("(" + Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue() + ")");
             }
         });
-
+        
         Slider_StampDateSize.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
@@ -293,7 +308,7 @@ public class PostLabelsSignController implements Initializable {
                 Label_StampDateSize.setText("(" + Double.valueOf(Slider_StampDateSize.getValue()).longValue() + ")");
             }
         });
-
+        
     }
 
     /**
@@ -311,19 +326,36 @@ public class PostLabelsSignController implements Initializable {
         // notify.darkStyle();
         notify.showWarning();
     }
-
-    private void setGenericSliderParameter(double min, double max, Slider sliderToChange) {
+    
+    private void setGenericSliderParameter(double min, double max, Slider sliderToChange,double majorTickUnit,int minorTickCount) {
         sliderToChange.setMin(min);
         sliderToChange.setMax(max);
-
+        
         sliderToChange.setShowTickLabels(true);
         sliderToChange.setShowTickMarks(true);
         sliderToChange.setSnapToTicks(true);
-
-        sliderToChange.setMajorTickUnit(5);
-        sliderToChange.setMinorTickCount(0);
-        sliderToChange.setBlockIncrement(5);
-
+        
+        sliderToChange.setMajorTickUnit(majorTickUnit);
+        sliderToChange.setMinorTickCount(minorTickCount);
+        sliderToChange.setBlockIncrement(10);
+        
     }
+    
+    private PdfData getData() {
+        PdfData data = new PdfData();
+        data.setPostLabelLocation(txtBox_PostLabelLocation.getText());
+        data.setSignatureImageLocation(txtBox_SignatureImageLocation.getText());
+        data.setSignedPostLabelFolderLocation(txtBox_SignedPostLabelFolderLocation.getText());
+        
+        data.setStampPointX(Double.valueOf(Slider_StampPointX.getValue()).longValue());
+        data.setStampPointY(Double.valueOf(Slider_StampPointY.getValue()).longValue());
+        data.setStampSignatureHeight(Double.valueOf(Slider_StampSignatureHeight.getValue()).longValue());
+        data.setStampWidth(Double.valueOf(Slider_StampWidth.getValue()).longValue());
+        data.setStampDateFontSize(Double.valueOf(Slider_StampDateSize.getValue()).longValue());
+        data.setSignedDate(DPicker_DateSigned.getValue());
 
+        // DPicker_DateSigned.getValue()
+        return data;
+    }
+    
 }

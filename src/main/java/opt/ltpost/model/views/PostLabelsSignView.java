@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import opt.ltpost.App;
 import opt.ltpost.controllers.PostLabelsSignController;
+import opt.ltpost.model.ModelPdf;
 import opt.ltpost.model.ModelPrefs;
 
 /**
@@ -30,10 +31,11 @@ public class PostLabelsSignView {
         nodeView = (AnchorPane) loader.load();
         
         ModelPrefs modelPrefs= new ModelPrefs();
+        ModelPdf modelPdf= new ModelPdf();
 
         // Give the controller access to the main app
         PostLabelsSignController controller = loader.getController();
-        controller.initParameters(App.getPrimaryStage(),modelPrefs);
+        controller.initParameters(App.getPrimaryStage(),modelPrefs,modelPdf);
     }
 
     public static synchronized PostLabelsSignView getInstance() throws IOException {

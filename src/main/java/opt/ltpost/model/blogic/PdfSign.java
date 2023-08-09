@@ -18,7 +18,6 @@ package opt.ltpost.model.blogic;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
@@ -28,9 +27,9 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Text;
+import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -40,29 +39,37 @@ public class PdfSign {
 
     private final String expectedText = "Date and sender's signature";
 
-    public void create() throws IOException {
+    public void create(PdfData data) throws IOException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        String dateString = formatter.format(date);
-        System.out.println(dateString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY/MM/dd");
+        String dateString = formatter.format(data.getSignedDate());
 
-        PdfReader reader = new PdfReader("C:\\Users\\gbruz\\Desktop\\EtsyDev\\RS0072996385-sticker_small.pdf");
-        PdfWriter writer = new PdfWriter("C:\\Users\\gbruz\\Desktop\\EtsyDev\\RS0072996385-sticker_small_New.pdf");
+        File filePdf = new File(data.getPostLabelLocation());
+ 
+
+        String fileNameWithoutExt = filePdf.getName().substring(0, filePdf.getName().lastIndexOf("."));
+
+        PdfReader reader = new PdfReader(filePdf.getPath());
+        
+        
+   
+        PdfWriter writer = new PdfWriter(data.getSignedPostLabelFolderLocation() +"\\"+ fileNameWithoutExt + "_SIGNED.pdf");
         PdfDocument pdfDocument = new PdfDocument(reader, writer);
+        
+      //      System.out.println("Info: " + pdfDocument.getDefaultPageSize().toString());
 
         //get number of pages in PDF file
         int numberOfPages = pdfDocument.getNumberOfPages();
         System.out.println("numberOfPages:" + numberOfPages);
 
         Document document = new Document(pdfDocument);
-        ImageData image = ImageDataFactory.create("C:\\Users\\gbruz\\Desktop\\EtsyDev\\apuokelio_logo.png");
-        Image imageModel = new Image(image);
-        imageModel.setHeight(20);
+//        ImageData image = ImageDataFactory.create("C:\\Users\\gbruz\\Desktop\\EtsyDev\\apuokelio_logo.png");
+//        Image imageModel = new Image(image);
+//        imageModel.setHeight(20);
 
-        ImageData imageSignature = ImageDataFactory.create("C:\\Users\\gbruz\\Desktop\\EtsyDev\\Signature1.png");
+        ImageData imageSignature = ImageDataFactory.create(data.getSignatureImageLocation());
         Image imageModelSignature = new Image(imageSignature);
-        imageModelSignature.setHeight(20);
+        imageModelSignature.setHeight(data.stampSignatureHeight);
 
         for (int i = 1; i <= numberOfPages; i++) {
             System.out.println("current page: " + i);
@@ -73,13 +80,13 @@ public class PdfSign {
                 System.out.println("Found signature text");
 
                 Text txtA = new Text(dateString)
-                        .setFontSize(10);
+                        .setFontSize(data.stampDateFontSize);
 
                 Paragraph paragrafoA = new Paragraph()
                         .add(txtA)
                         .add(imageModelSignature)
                         //   .add(imageModel)
-                     //   .setBackgroundColor(ColorConstants.BLACK)
+                        //   .setBackgroundColor(ColorConstants.BLACK)
                         .setRotationAngle(Math.toRadians(90));
 
                 //     paragrafoA.setRotationAngle(Math.toRadians(90));
@@ -87,7 +94,7 @@ public class PdfSign {
                 float x = pdfDocument.getDefaultPageSize().getWidth() / 2;
                 float y = pdfDocument.getDefaultPageSize().getHeight() / 2;
 
-                paragrafoA.setFixedPosition(i, x - 5, 30, 400);
+                paragrafoA.setFixedPosition(i, x + data.stampPointX, data.stampPointY, data.stampWidth);
                 document.add(paragrafoA);
 
                 System.out.println("x: " + x + " y: " + y);
