@@ -39,6 +39,9 @@ public class App extends Application {
         // title
         primaryStage.setTitle("LT Post");
 
+        primaryStage.setMinWidth(810);
+        primaryStage.setMinHeight(500);
+
         ModelView.getInstance().showPostLabelSignView();
 
     }

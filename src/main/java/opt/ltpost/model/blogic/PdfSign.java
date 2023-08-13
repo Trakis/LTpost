@@ -22,7 +22,10 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.FilteredEventListener;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.IPdfTextLocation;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.RegexBasedLocationExtractionStrategy;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
@@ -30,6 +33,7 @@ import com.itextpdf.layout.element.Text;
 import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
 /**
  *
@@ -45,39 +49,34 @@ public class PdfSign {
         String dateString = formatter.format(data.getSignedDate());
 
         File filePdf = new File(data.getPostLabelLocation());
- 
 
         String fileNameWithoutExt = filePdf.getName().substring(0, filePdf.getName().lastIndexOf("."));
 
         PdfReader reader = new PdfReader(filePdf.getPath());
-        
-        
-   
-        PdfWriter writer = new PdfWriter(data.getSignedPostLabelFolderLocation() +"\\"+ fileNameWithoutExt + "_SIGNED.pdf");
+
+        PdfWriter writer = new PdfWriter(data.getSignedPostLabelFolderLocation() + "\\" + fileNameWithoutExt + "_SIGNED.pdf");
         PdfDocument pdfDocument = new PdfDocument(reader, writer);
-        
-      //      System.out.println("Info: " + pdfDocument.getDefaultPageSize().toString());
 
         //get number of pages in PDF file
         int numberOfPages = pdfDocument.getNumberOfPages();
-        System.out.println("numberOfPages:" + numberOfPages);
 
         Document document = new Document(pdfDocument);
-//        ImageData image = ImageDataFactory.create("C:\\Users\\gbruz\\Desktop\\EtsyDev\\apuokelio_logo.png");
-//        Image imageModel = new Image(image);
-//        imageModel.setHeight(20);
 
         ImageData imageSignature = ImageDataFactory.create(data.getSignatureImageLocation());
         Image imageModelSignature = new Image(imageSignature);
         imageModelSignature.setHeight(data.stampSignatureHeight);
 
-        for (int i = 1; i <= numberOfPages; i++) {
-            System.out.println("current page: " + i);
-            PdfPage page = pdfDocument.getPage(i);
-            String pdfPageText = PdfTextExtractor.getTextFromPage(page);
-            if (pdfPageText.contains(expectedText)) {
+        FilteredEventListener listener = new FilteredEventListener();
 
-                System.out.println("Found signature text");
+        for (int i = 1; i <= numberOfPages; i++) {
+
+            PdfPage currentPage = pdfDocument.getPage(i);
+
+            RegexBasedLocationExtractionStrategy extractionStrategy = new RegexBasedLocationExtractionStrategy(expectedText);
+            new PdfCanvasProcessor(extractionStrategy).processPageContent(currentPage);
+
+            Collection<IPdfTextLocation> eL = extractionStrategy.getResultantLocations();
+            for (IPdfTextLocation location : eL) {
 
                 Text txtA = new Text(dateString)
                         .setFontSize(data.stampDateFontSize);
@@ -86,18 +85,11 @@ public class PdfSign {
                         .add(txtA)
                         .add(imageModelSignature)
                         //   .add(imageModel)
-                        //   .setBackgroundColor(ColorConstants.BLACK)
+                        // .setBackgroundColor(ColorConstants.BLACK)
                         .setRotationAngle(Math.toRadians(90));
+                paragrafoA.setFixedPosition(i, location.getRectangle().getX() + data.stampPointX, location.getRectangle().getY() + data.stampPointY, data.stampWidth);
 
-                //     paragrafoA.setRotationAngle(Math.toRadians(90));
-                //  document.showTextAligned(paragrafoA, 200, 100, TextAlignment.LEFT);
-                float x = pdfDocument.getDefaultPageSize().getWidth() / 2;
-                float y = pdfDocument.getDefaultPageSize().getHeight() / 2;
-
-                paragrafoA.setFixedPosition(i, x + data.stampPointX, data.stampPointY, data.stampWidth);
                 document.add(paragrafoA);
-
-                System.out.println("x: " + x + " y: " + y);
             }
 
         }
@@ -105,6 +97,7 @@ public class PdfSign {
         pdfDocument.close();
         reader.close();
         writer.close();
+
     }
 
 }

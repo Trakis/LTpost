@@ -44,6 +44,7 @@
             <type>pom</type>       
           
         </dependency>
+
         
         <!--ControlsFX for notifications-->
         <dependency>
@@ -52,6 +53,7 @@
             <version>11.1.2</version>
         </dependency>
         
+        <!--icons ikonli-->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
@@ -63,18 +65,36 @@
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-lineawesome-pack</artifactId>
             <version>${ikonli.version}</version>
+        </dependency>      
+       
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-simpleicons-pack</artifactId>
+            <version>${ikonli.version}</version>
+        </dependency>       
+ 
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-materialdesign2-pack</artifactId>
+            <version>${ikonli.version}</version>
         </dependency>
+
+
+
+
+
+
         
         <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>${slf4j.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>${slf4j.version}</version>
-</dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
 
     </dependencies>

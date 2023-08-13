@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="500.0" minWidth="600.0" stylesheets="@../css/modena.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="opt.ltpost.controllers.PostLabelsSignController">
+<AnchorPane minWidth="600.0" stylesheets="@../css/modena.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="opt.ltpost.controllers.PostLabelsSignController">
    <children>
-      <VBox layoutX="20.0" layoutY="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_RIGHT">
+            <HBox alignment="BOTTOM_RIGHT" VBox.vgrow="NEVER">
                <children>
                   <Label styleClass="label-header" text="Post Labels Manipulation">
                      <HBox.margin>
@@ -31,12 +31,7 @@
             <Separator opacity="0.5" prefWidth="200.0" />
             <VBox spacing="5.0">
                <children>
-                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="10.0" />
-                     </padding>
-                  </HBox>
-                  <Label styleClass="label-bright" text="A5 format post label (*.pdf) File you wish to sign:" />
+                  <Label styleClass="label-bright" text="Post Label (*.pdf) file you wish to sign:" />
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <TextField fx:id="txtBox_PostLabelLocation" editable="false" HBox.hgrow="ALWAYS">
@@ -44,7 +39,7 @@
                               <Insets />
                            </HBox.margin>
                         </TextField>
-                        <Button mnemonicParsing="false" onAction="#onClickPostLabelLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btt_PostLabelLocation" mnemonicParsing="false" onAction="#onClickPostLabelLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0">
@@ -59,11 +54,6 @@
             </VBox>
             <VBox spacing="5.0">
                <children>
-                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="10.0" />
-                     </padding>
-                  </HBox>
                   <Label styleClass="label-bright" text="Signed Document Folder Location:" />
                   <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
@@ -72,7 +62,7 @@
                               <Insets />
                            </HBox.margin>
                         </TextField>
-                        <Button mnemonicParsing="false" onAction="#onClickSignedPostLabelFolderLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btt_SignedPostLabelFolderLocation" mnemonicParsing="false" onAction="#onClickSignedPostLabelFolderLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0">
@@ -88,7 +78,7 @@
             <Separator opacity="0.5" prefWidth="200.0" />
             <VBox alignment="TOP_CENTER" prefHeight="80.0">
                <children>
-                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickSignDocument" text="Click to create new signed Document" VBox.vgrow="ALWAYS" />
+                  <Button fx:id="btt_SignDocument" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="60.0" mnemonicParsing="false" onAction="#onClickSignDocument" text="Click to create new signed document" VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets left="10.0" right="10.0" />
@@ -137,7 +127,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </TextField>
-                                    <Button mnemonicParsing="false" onAction="#onClickSignatureImageLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="btt_SignatureImageLocation" mnemonicParsing="false" onAction="#onClickSignatureImageLocation_Browse" text="Browse" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -154,9 +144,9 @@
                   <Insets left="10.0" right="10.0" />
                </padding>
             </VBox>
-            <Accordion>
+            <Accordion fx:id="Accordion_microAdjustment" VBox.vgrow="ALWAYS">
               <panes>
-                <TitledPane animated="false" text="Micro Adjustments">
+                <TitledPane fx:id="tpl_MicroAdjustments" animated="false" text="Micro Adjustments">
                   <content>
                     <AnchorPane>
                            <children>
