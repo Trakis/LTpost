@@ -112,10 +112,11 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <itext.version>8.0.1</itext.version>
-    <javafx.version>21-ea+24</javafx.version>
     <slf4j.version>2.0.7</slf4j.version>
-    <ikonli.version>12.3.1</ikonli.version>
+    <ikonli.version>12.4.0</ikonli.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <javafx.version>26-ea+18</javafx.version>
+    <controlfx.version>11.2.2</controlfx.version>
   </properties>
 </project>
