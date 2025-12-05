@@ -10,7 +10,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <release>17</release>
+          <release>24</release>
           <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
@@ -112,10 +112,10 @@
     </dependency>
   </dependencies>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <itext.version>8.0.1</itext.version>
+    <javafx.version>21-ea+24</javafx.version>
     <slf4j.version>2.0.7</slf4j.version>
     <ikonli.version>12.3.1</ikonli.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javafx.version>21-ea+24</javafx.version>
   </properties>
 </project>
